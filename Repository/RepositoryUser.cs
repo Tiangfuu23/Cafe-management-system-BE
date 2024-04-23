@@ -20,12 +20,12 @@ namespace Repository
             Create(user);
         }
 
-        public User? getUser(string username, bool trackchange)
+        public User? GetUser(string username, bool trackchange)
         {
             return FindByCondition(u => u.username == username, trackchange).SingleOrDefault();
         }
 
-        public User? getUser(int userId, bool trackChange)
+        public User? GetUser(int userId, bool trackChange)
         {
             return FindByCondition(u => u.userId == userId, trackChange).SingleOrDefault();
         }

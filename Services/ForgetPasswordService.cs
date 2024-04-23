@@ -22,7 +22,7 @@ namespace Services
 
         public bool handleForgetPassword(ForgetPasswordDto forgetPassword)
         {
-            var userEntity = _repository.RepositoryUser.getUser(forgetPassword.username, trackChange: true);
+            var userEntity = _repository.RepositoryUser.GetUser(forgetPassword.username, trackChange: true);
 
             if (userEntity == null) throw new UserNotFoundException(forgetPassword.username);
 

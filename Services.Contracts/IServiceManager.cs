@@ -7,6 +7,8 @@ namespace Services.Contracts
         ILoginService LoginService { get; }
 
         ICategoryService CategoryService { get; }
+        IProductService ProductService { get; }
         IForgetPasswordService ForgetPasswordService { get; }
+
     }
 }

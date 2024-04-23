@@ -7,6 +7,8 @@
         IRepositoryRole RepositoryRole { get; }
 
         IRepositoryCategory RepositoryCategory { get; }
+
+        IRepositoryProduct RepositoryProduct{get; }
         void Save();
     }
 }

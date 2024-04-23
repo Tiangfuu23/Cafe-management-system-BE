@@ -12,12 +12,14 @@ namespace Services
         private readonly Lazy<ILoginService> _loginService;
         private readonly Lazy<IForgetPasswordService> _forgetPasswordService;
         private readonly Lazy<ICategoryService> _categoryService;
+        private readonly Lazy<IProductService> _productService;
         public ServiceManager(ILoggerManager logger, IMapper mapper, IConfiguration config, IRepositoryManager repositoryManager, EmailConfiguration emailConfiguration)
         {
             _userService = new Lazy<IUserService>(() => new UserService(logger, mapper, repositoryManager));
             _loginService = new Lazy<ILoginService> (() => new LoginService(config, mapper, logger, repositoryManager));
             _forgetPasswordService = new Lazy<IForgetPasswordService>(() => new ForgetPasswordService(repositoryManager, emailConfiguration, logger));
             _categoryService = new Lazy<ICategoryService>(() => new CategoryService(repositoryManager, logger, mapper));
+            _productService = new Lazy<IProductService>(() => new ProductService(repositoryManager, mapper));
         }
         public IUserService UserService => _userService.Value;
         public ILoginService LoginService => _loginService.Value;
@@ -25,6 +27,8 @@ namespace Services
         public IForgetPasswordService ForgetPasswordService => _forgetPasswordService.Value;
 
         public ICategoryService CategoryService => _categoryService.Value;
+
+        public IProductService ProductService => _productService.Value;
 
     }
 }

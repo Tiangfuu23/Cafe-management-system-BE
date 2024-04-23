@@ -18,10 +18,24 @@ namespace Services
             _repositoryManager = repositoryManager;
         }
 
-        public IEnumerable<UserDto> GetAllUsers()
+        public UserDto GetUser(int id, bool trackChange)
         {
-            var usersList = _repositoryManager.RepositoryUser.GetAllUsers(false);
-            var rolesList = _repositoryManager.RepositoryRole.GetAllRoles(false);
+            var userEntity = _repositoryManager.RepositoryUser.GetUser(id, trackChange);
+            if (userEntity == null) throw new UserNotFoundException(id);
+
+            var roleEntity = _repositoryManager.RepositoryRole.GetRole(userEntity.roleId, trackChange);
+            if(roleEntity == null) throw new RoleNotFoundException(userEntity.roleId);
+
+            userEntity.Role = roleEntity;
+
+            var userDto = _mapper.Map<UserDto>(userEntity);
+            return userDto;
+        }
+
+        public IEnumerable<UserDto> GetAllUsers(bool trackChange)
+        {
+            var usersList = _repositoryManager.RepositoryUser.GetAllUsers(trackChange);
+            var rolesList = _repositoryManager.RepositoryRole.GetAllRoles(trackChange);
             var usersForResponse = (from user in usersList
                                     join role in rolesList
                                     on user.roleId equals role.roleId
@@ -52,7 +66,7 @@ namespace Services
 
             _logger.LogInfo("userForRegistration: " + userEntity.username);
             // 1. Check username's already exist or not 
-            var userFound = _repositoryManager.RepositoryUser.getUser(userEntity.username, false);
+            var userFound = _repositoryManager.RepositoryUser.GetUser(userEntity.username, false);
 
             if (userFound != null) throw new UsernameExistException(userForRegistrationDto.username);
                 
@@ -67,7 +81,7 @@ namespace Services
 
         public void UpdatePassword(int userId, PasswordForUpdateDto passwordForUpdateDto)
         {
-            var userEntity = _repositoryManager.RepositoryUser.getUser(userId, trackChange: true);
+            var userEntity = _repositoryManager.RepositoryUser.GetUser(userId, trackChange: true);
             if (userEntity == null) throw new UserNotFoundException(userId);
 
             if (userEntity.password != passwordForUpdateDto.OldPassword) throw new WrongUsernameOrPasswordException(isWrongPassword: true);
@@ -79,7 +93,7 @@ namespace Services
 
         public void UpdateUser(int userId, UserForUpdateDto userForUpdateDto)
         {
-            var userEntity = _repositoryManager.RepositoryUser.getUser(userId, trackChange: true);
+            var userEntity = _repositoryManager.RepositoryUser.GetUser(userId, trackChange: true);
 
             if (userEntity == null) throw new UserNotFoundException(userId);
 

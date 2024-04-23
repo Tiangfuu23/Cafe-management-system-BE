@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Entities.Models
@@ -7,7 +6,7 @@ namespace Entities.Models
     public class Product
     {
         [Key]
-        [Column("ProductID")]
+        [Column("ProductId")]
         public int id { get; set; }
 
         [Required(ErrorMessage = "Product's name is required")]

@@ -17,6 +17,11 @@ namespace Cafe_management_system
             CreateMap<Category, CategoryDto>();
             CreateMap<CategoryForCreationDto, Category>();
             CreateMap<CategoryForUpdateDto, Category>();
+            CreateMap<ProductForCreationDto, Product>();
+            CreateMap<Product, ProductDto>()
+                .ForCtorParam("category", opts => opts.MapFrom(src => src.Category))
+                .ForCtorParam("creator", opts => opts.MapFrom(src => src.User.fullname));
+            CreateMap<ProductForUpdateDto, Product>();
         }
     }
 }

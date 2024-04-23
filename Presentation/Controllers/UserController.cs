@@ -21,7 +21,7 @@ namespace Presentation.Controllers {
         [Authorize]
         public IActionResult GetUsers()
         {
-           var userDtoList = _serviceManager.UserService.GetAllUsers();
+           var userDtoList = _serviceManager.UserService.GetAllUsers(trackChange: false);
 
             return Ok(userDtoList);
         }
@@ -38,7 +38,7 @@ namespace Presentation.Controllers {
 
         [Route("{id:int}")]
         [HttpPut]
-        //[Authorize]
+        [Authorize]
         public IActionResult UpdateUser(int id, [FromBody] UserForUpdateDto userForUpdate)
         {
             _serviceManager.UserService.UpdateUser(id, userForUpdate);
@@ -55,5 +55,13 @@ namespace Presentation.Controllers {
             return Ok(new {message = "Cập nhật mật khẩu thành công!"});
         }
 
+        [Route("{id:int}")]
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetUser(int id)
+        {
+            var userDto = _serviceManager.UserService.GetUser(id, trackChange: false);
+            return Ok(userDto);
+        }
     }
 }

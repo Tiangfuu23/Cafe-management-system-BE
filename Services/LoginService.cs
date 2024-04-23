@@ -30,7 +30,7 @@ namespace Services
         }
         public bool ValidateUSer(UserForAuthenticationDto userForAuth)
         {
-            user = _repositoryManager.RepositoryUser.getUser(userForAuth.username, trackChange: false);
+            user = _repositoryManager.RepositoryUser.GetUser(userForAuth.username, trackChange: false);
 
             var userInDb = user != null && user.password == userForAuth.password;
 

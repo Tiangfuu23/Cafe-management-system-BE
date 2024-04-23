@@ -14,5 +14,7 @@ namespace Services.Contracts
         void updateCategory(int categoryId, CategoryForUpdateDto categoryForUpdateDto);
 
         void deleteCategory(int categoryId);
+
+        IEnumerable<ProductDto> getProductsByCategoryId(int categoryId, bool trackChange);
     }
 }

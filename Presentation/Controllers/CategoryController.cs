@@ -64,5 +64,14 @@ namespace Presentation.Controllers
             _service.CategoryService.deleteCategory(id);
             return Ok(new { message = "Xóa category thành công" });
         }
+
+        [HttpGet]
+        [Authorize]
+        [Route("{id:int}/Product")]
+        public IActionResult getProductsByCategoryId(int id)
+        {
+            var productsDtoList = _service.CategoryService.getProductsByCategoryId(id, trackChange: false);
+            return Ok(productsDtoList);
+        }
     }
 }
