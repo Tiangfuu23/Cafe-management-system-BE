@@ -10,9 +10,9 @@ namespace Repository
         {
         }
 
-        public IEnumerable<User> GetAllUsers(bool trackchanges) 
+        public IEnumerable<User> GetAllUsers(bool trackchange) 
         {
-            return FindAll(trackchanges).OrderBy(u => u.userId).ToList();        
+            return FindAll(trackchange).OrderBy(u => u.userId).ToList();        
         }    
 
         public void CreateUser(User user)

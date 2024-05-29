@@ -20,7 +20,7 @@ namespace Services
         private readonly ILoggerManager _logger;
         private readonly IRepositoryManager _repositoryManager;
 
-        private User? user;
+
         public LoginService( IConfiguration config, IMapper mapper, ILoggerManager logger, IRepositoryManager repositoryManager)
         {
             _config = config;
@@ -28,22 +28,37 @@ namespace Services
             _logger = logger;
             _repositoryManager = repositoryManager;
         }
-        public bool ValidateUSer(UserForAuthenticationDto userForAuth)
+        public (UserDto, TokenDto) ValidateUSer(UserForAuthenticationDto userForAuth)
         {
-            user = _repositoryManager.RepositoryUser.GetUser(userForAuth.username, trackChange: false);
+            var user = _repositoryManager.RepositoryUser.GetUser(userForAuth.username, trackChange: false);
 
-            var userInDb = user != null && user.password == userForAuth.password;
+            if(user == null || user.password != userForAuth.password)
+            {
+                throw new WrongUsernameOrPasswordException((user == null), (user != null && user.password != user.password));
 
-            if (!userInDb) throw new WrongUsernameOrPasswordException();
+            }
 
-            return userInDb;
+            var roles = _repositoryManager.RepositoryRole.GetAllRoles(trackChange: false);
+
+            foreach(var role in roles)
+            {
+                if(user.roleId == role.roleId)
+                {
+                    user.Role = role;
+                }
+            }
+            var token = CreateToken(user);
+
+            var tokenDto = _mapper.Map<TokenDto>(token);
+            var userDto = _mapper.Map<UserDto>(user);
+            return (userDto, tokenDto);
         }
 
-        public string CreateToken()
+        public string CreateToken(User user)
         {
             // 1.Create Signing Credential
             var signingCredentials = GetSigningCredentials();
-            var claims = GetClaims();
+            var claims = GetClaims(user);
             // 2.Create Token Options - JwtSecurityToken
             var jwtTokenOptions = GenerateTokenOptions(signingCredentials, claims);
             // 3.Create Token
@@ -59,7 +74,7 @@ namespace Services
             return new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
         }
 
-        private List<Claim> GetClaims()
+        private List<Claim> GetClaims(User user)
         {
             var userRole = _repositoryManager.RepositoryRole.GetRole(user.roleId, trackChange: false);
             var claims = new List<Claim>()

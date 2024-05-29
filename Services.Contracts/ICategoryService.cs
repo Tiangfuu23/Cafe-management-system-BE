@@ -9,7 +9,7 @@ namespace Services.Contracts
 
         CategoryDto getCategoryById(int id, bool trackChange);
 
-        void createCategory(CategoryForCreationDto categoryForCreationDto);
+        int createCategory(CategoryForCreationDto categoryForCreationDto);
 
         void updateCategory(int categoryId, CategoryForUpdateDto categoryForUpdateDto);
 

@@ -3,5 +3,5 @@
 namespace Shared.DataTransferObjects
 {
     public record ProductDto(int id, string productName, string description, float price,
-                                bool status, CategoryDto category, string creator);
+                                int status, bool active ,CategoryDto category, string creator);
 }

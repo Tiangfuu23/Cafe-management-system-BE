@@ -9,6 +9,7 @@ namespace Services.Contracts
         ICategoryService CategoryService { get; }
         IProductService ProductService { get; }
         IForgetPasswordService ForgetPasswordService { get; }
-
+        IBillService BillService { get; }
+        IDashboardService DashboardService { get; }
     }
 }

@@ -15,6 +15,6 @@ namespace Entities.Models
         public string? description { get; set; }
 
 
-        public ICollection<User> User { get; set; }
+        public ICollection<User>? Users { get; set; }
     }
 }

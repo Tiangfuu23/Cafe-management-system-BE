@@ -21,7 +21,7 @@ namespace Services
             _mapper = mapper;
         }
 
-        public void createCategory(CategoryForCreationDto categoryForCreationDto)
+        public int createCategory(CategoryForCreationDto categoryForCreationDto)
         {
             var categoriesEntityList = _repository.RepositoryCategory.GetAllCategories(false);
             
@@ -34,6 +34,8 @@ namespace Services
             var categoryEntity = _mapper.Map<Category>(categoryForCreationDto);
             _repository.RepositoryCategory.CreateCategory(categoryEntity);
             _repository.Save();
+
+            return categoryEntity.id;
         }
 
         public void deleteCategory(int categoryId)
@@ -106,7 +108,7 @@ namespace Services
                                         productName = product.productName,
                                         description = product.description,
                                         price = product.price,
-                                        status = product.status,
+                                        active = product.active,
                                         Category = new Category
                                         {
                                             id = category.id,

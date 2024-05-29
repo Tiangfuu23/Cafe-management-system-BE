@@ -39,8 +39,8 @@ namespace Presentation.Controllers
         [Authorize]
         public IActionResult createCategory([FromBody] CategoryForCreationDto categoryForCreation)
         {
-            _service.CategoryService.createCategory(categoryForCreation);
-            return StatusCode(201, new { message = "Thêm mới thành công" });
+            int id = _service.CategoryService.createCategory(categoryForCreation);
+            return StatusCode(201, new { message = "Thêm mới thành công", id });
         }
 
         [HttpPut]

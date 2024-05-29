@@ -22,6 +22,14 @@ namespace Cafe_management_system
                 .ForCtorParam("category", opts => opts.MapFrom(src => src.Category))
                 .ForCtorParam("creator", opts => opts.MapFrom(src => src.User.fullname));
             CreateMap<ProductForUpdateDto, Product>();
+            CreateMap<BillForCreationDto, Bill>()
+                .ForMember(dest => dest.creationDate, opt => opt.MapFrom(src => src.creationDate.ToUniversalTime()));
+            CreateMap<PaymentMethod, PaymentMethodDto>();
+            CreateMap<Bill, BillDto>()
+                .ForMember(dest => dest.paymentMethod, opt => opt.MapFrom(src => src.PaymentMethod))
+                .ForMember(dest => dest.user, opt => opt.MapFrom(src => src.User));
+            CreateMap<string, TokenDto>()
+                .ForCtorParam("token", opts => opts.MapFrom(src => src));
         }
     }
 }

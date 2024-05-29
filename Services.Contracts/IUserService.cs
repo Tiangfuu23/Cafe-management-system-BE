@@ -1,5 +1,6 @@
 ﻿using Entities.Models;
 using Entities.DataTransferObjects;
+using Shared.DataTransferObjects;
 namespace Services.Contracts
 {
     public interface IUserService
@@ -8,11 +9,11 @@ namespace Services.Contracts
 
         public UserDto GetUser(int id, bool trackChange);
 
-        public bool Register(UserForRegistrationDto userForRegistrationDto);
+        public int Register(UserForRegistrationDto userForRegistrationDto);
 
         void UpdatePassword(int userId, PasswordForUpdateDto passwordForUpdateDto);
-        //public void Update()
 
         void UpdateUser(int userId, UserForUpdateDto userForUpdateDto);
+
     }
 }

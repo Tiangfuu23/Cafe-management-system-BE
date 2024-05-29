@@ -9,6 +9,14 @@ namespace Repository
         DbSet<Role> Roles { get; set; }
         DbSet<Category> Categories { get; set; }
         DbSet<Product> Products { get; set; }
+
+        DbSet<PaymentMethod> PaymentMethods { get; set; }
+
+        DbSet<Bill> Bills { get; set; }
+
+        DbSet<BillProduct> BillProducts { get; set; }
+
+        DbSet<OtpCode> OtpCodes {get; set;}
         public RepositoryContext(DbContextOptions options) : base(options)
         {
 
@@ -19,6 +27,7 @@ namespace Repository
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
+            modelBuilder.ApplyConfiguration(new PaymentMethodConfiguration());
         }
 
     }

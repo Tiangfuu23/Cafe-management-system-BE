@@ -45,6 +45,9 @@ namespace Services
                                         userId = user.userId,
                                         username = user.username,
                                         fullname = user.fullname,
+                                        email = user.email,
+                                        gender = user.gender,
+                                        birthday = user.birthday,
                                         Role = new Role
                                         {
                                             roleId = user.roleId,
@@ -59,7 +62,7 @@ namespace Services
             return usersDtoList;
         }
 
-        public bool Register(UserForRegistrationDto userForRegistrationDto)
+        public int Register(UserForRegistrationDto userForRegistrationDto)
         {
             var userEntity = _mapper.Map<User>(userForRegistrationDto);
             userEntity.birthday = ConvertDateTimeToUTC(userEntity.birthday);
@@ -75,7 +78,7 @@ namespace Services
             // 2. Add userForRegistration to Dtb
             _repositoryManager.RepositoryUser.CreateUser(userEntity);
             _repositoryManager.Save(); // <-- need to call this method to update db when implemting CUD Method
-            return true;
+            return userEntity.userId;
 
         }
 
@@ -84,10 +87,10 @@ namespace Services
             var userEntity = _repositoryManager.RepositoryUser.GetUser(userId, trackChange: true);
             if (userEntity == null) throw new UserNotFoundException(userId);
 
-            if (userEntity.password != passwordForUpdateDto.OldPassword) throw new WrongUsernameOrPasswordException(isWrongPassword: true);
+            if (passwordForUpdateDto.oldPassword != null &&  userEntity.password != passwordForUpdateDto.oldPassword) throw new WrongUsernameOrPasswordException(false, true);
 
             // Update new password
-            userEntity.password = passwordForUpdateDto.NewPasswrod;
+            userEntity.password = passwordForUpdateDto.newPassword;
             _repositoryManager.Save();
         }
 

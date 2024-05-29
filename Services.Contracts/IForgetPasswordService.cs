@@ -1,10 +1,13 @@
 ﻿using Entities.DataTransferObjects;
-using Entities.MessageDetail;
+using Entities.Models;
+using Shared.DataTransferObjects;
 
 namespace Services.Contracts
 {
     public interface IForgetPasswordService
     {
-        bool handleForgetPassword(ForgetPasswordDto forgetPassword);
+        int handleForgetPassword(ForgetPasswordDto forgetPassword);
+
+        User authenticateOtpCode(OtpCodeForValidationDto optCodeForValidDto);
     }
 }

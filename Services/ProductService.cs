@@ -17,13 +17,13 @@ namespace Services
             _mapper = mapper;
         }
 
-        public void CreateProduct(ProductForCreationDto productForCreation)
+        public int CreateProduct(ProductForCreationDto productForCreation)
         {
             // 1. Check Product's name already exist or not
             // 2. Check Category id already exist or not
             // 3. Check User id already exist or not 
             var ProductsEntityList = _repository.RepositoryProduct.GetProducts(trackChange: false);
-            foreach(var prod in  ProductsEntityList)
+            foreach(var prod in ProductsEntityList)
             {
                 if (prod.productName == productForCreation.productName)
                     throw new ProductAlreadyExistException(productForCreation.productName);
@@ -37,6 +37,8 @@ namespace Services
             var productEntity = _mapper.Map<Product>(productForCreation);
             _repository.RepositoryProduct.CreateProduct(productEntity);
             _repository.Save();
+
+            return productEntity.id;
         }
 
         public IEnumerable<ProductDto> GetAllProducts(bool trackChange)
@@ -57,6 +59,7 @@ namespace Services
                                             productName = product.productName,
                                             description = product.description,
                                             price = product.price,
+                                            active = product.active,
                                             status = product.status,
                                             Category = new Category
                                             {
@@ -116,7 +119,7 @@ namespace Services
             var productEntity = _repository.RepositoryProduct.GetProduct(id, trackChange: true);
             if (productEntity == null) throw new ProductNotFoundException(id);
 
-            productEntity.status = newStatus;
+            productEntity.active = newStatus;
             _repository.Save();
         }
     }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Services.Contracts;
 using Entities.DataTransferObjects;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Presentation.Controllers
 {
@@ -18,12 +19,19 @@ namespace Presentation.Controllers
         [HttpPost]
         public IActionResult Login([FromBody] UserForAuthenticationDto userforAuth)
         {
-            var userInDb = _serviceManager.LoginService.ValidateUSer(userforAuth);
-            if (!userInDb)
-            {
-                return Unauthorized();
-            }
-            return Ok(new {token = _serviceManager.LoginService.CreateToken() });
+            var result = _serviceManager.LoginService.ValidateUSer(userforAuth);
+            var userDto = result.Item1 as UserDto;
+            var tokenDto = result.Item2 as TokenDto;
+            return Ok(new {user = userDto,  tokenDto.token });
+        }
+
+        [Route("Validate")] 
+        [HttpPost]
+        [Authorize]
+        public IActionResult LoginValidate()
+        {
+            // if reach here -> token is valid
+            return Ok(true);
         }
     }
 }

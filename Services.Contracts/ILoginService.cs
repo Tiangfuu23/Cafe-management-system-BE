@@ -1,11 +1,12 @@
 ﻿
 using Entities.DataTransferObjects;
+using Entities.Models;
 
 namespace Services.Contracts
 {
     public interface ILoginService
     {
-        bool ValidateUSer(UserForAuthenticationDto userForAuth);
-        string CreateToken();
+        (UserDto, TokenDto) ValidateUSer(UserForAuthenticationDto userForAuth);
+        string CreateToken(User user);
     }
 }

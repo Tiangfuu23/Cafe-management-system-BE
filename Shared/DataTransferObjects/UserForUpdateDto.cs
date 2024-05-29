@@ -7,8 +7,8 @@ namespace Entities.DataTransferObjects
         [Required(ErrorMessage = "Fullname is required")]
         public string? fullname { get; init; }
 
-        [Required(ErrorMessage = "Password is required")]
-        public string? password { get; init; }
+        //[Required(ErrorMessage = "Password is required")]
+        //public string? password { get; init; }
 
         [Required(ErrorMessage = "Email is required")]
         public string? email { get; init; }

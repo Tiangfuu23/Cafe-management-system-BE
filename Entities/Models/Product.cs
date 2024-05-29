@@ -23,7 +23,11 @@ namespace Entities.Models
 
         [Required(ErrorMessage = "Product's status is required")]
         [Column("Status")]
-        public bool status { get; set; }
+        public int status { get; set; }
+
+        [Required(ErrorMessage = "Product's active field is required")]
+        [Column("Active")]
+        public bool active { get; set; }
 
         [Required(ErrorMessage = "User id is required")]
         [Column("UserId")]
@@ -37,6 +41,6 @@ namespace Entities.Models
 
         public Category? Category { get; set; }
 
-
+        public List<BillProduct>? BillProducts { get; set; }
     }
 }

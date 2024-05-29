@@ -25,12 +25,13 @@ namespace Cafe_management_system.Extensions
                             NotFoundException => StatusCodes.Status404NotFound,
                             ConflictException => StatusCodes.Status409Conflict,
                             BadRequestException => StatusCodes.Status400BadRequest,
+                            ForBiddenExpcetion => StatusCodes.Status403Forbidden,
                             _ => StatusCodes.Status500InternalServerError
                         };
                         logger.LogError($"Something went wrong: {contextFeature.Error}");
                         await context.Response.WriteAsync(new ErrorDetails()
                         {
-                            Statuscode = context.Response.StatusCode,
+                            StatusCode = context.Response.StatusCode,
                             Message =   contextFeature.Error.Message
                         }.ToString());
                     }

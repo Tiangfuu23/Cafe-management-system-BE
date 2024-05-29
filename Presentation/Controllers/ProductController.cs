@@ -19,9 +19,9 @@ namespace Presentation.Controllers
         [HttpPost]
         public IActionResult createProduct([FromBody] ProductForCreationDto productForCreation)
         {
-            _services.ProductService.CreateProduct(productForCreation);
+            int id = _services.ProductService.CreateProduct(productForCreation);
 
-            return StatusCode(201, new {message = "Thêm mới thành công!"});
+            return StatusCode(201, new {message = "Thêm mới thành công!", id});
         }
 
         [HttpGet]

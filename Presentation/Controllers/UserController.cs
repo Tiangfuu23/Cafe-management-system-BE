@@ -30,10 +30,9 @@ namespace Presentation.Controllers {
         [HttpPost]
         public IActionResult Register([FromBody] UserForRegistrationDto userForRegistrationDto)
         {
-            var success = _serviceManager.UserService.Register(userForRegistrationDto);
+            var id = _serviceManager.UserService.Register(userForRegistrationDto);
 
-            if (!success) return BadRequest();
-            return StatusCode(201,new {message = "Thêm mới thành công"});
+            return StatusCode(201,new {message = "Thêm mới thành công", id});
         }
 
         [Route("{id:int}")]
@@ -62,6 +61,15 @@ namespace Presentation.Controllers {
         {
             var userDto = _serviceManager.UserService.GetUser(id, trackChange: false);
             return Ok(userDto);
+        }
+
+        [Route("{id:int}/Bill")]
+        [HttpGet]
+        [Authorize]
+        public IActionResult GetBillsByUserId(int id)
+        {
+            var billDtoList = _serviceManager.BillService.GetAllBills(trackChange: false).Where(p => p.user.id == id);
+            return Ok(billDtoList);
         }
     }
 }

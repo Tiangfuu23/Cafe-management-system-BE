@@ -1,5 +1,6 @@
 using Cafe_management_system.Extensions;
 using Contracts;
+using Microsoft.Extensions.FileProviders;
 using NLog;
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,7 +47,17 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 var _logger = app.Services.GetRequiredService<ILoggerManager>();
+
+app.UseCors("cors");
+
 app.ConfigureExceptionHandler(_logger);
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+           Path.Combine(builder.Environment.ContentRootPath, "MyStaticFiles")),
+    RequestPath = "/StaticFiles"
+});
 
 app.UseAuthentication();
 app.UseAuthorization();

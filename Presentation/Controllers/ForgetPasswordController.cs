@@ -2,7 +2,7 @@
 using Services.Contracts;
 using Entities.Configuration;
 using Entities.DataTransferObjects;
-using Entities.MessageDetail;
+using Shared.DataTransferObjects;
 namespace Presentation.Controllers
 {
     [Route("ForgetPassword")]
@@ -16,17 +16,21 @@ namespace Presentation.Controllers
             _service = serviceManager;
             _emailConfiguration = emailConfig;
         }
-
+  
         [HttpPost]
         public IActionResult ForgetPassword([FromBody] ForgetPasswordDto forgetPassword)
         {
+            var otpCodeId = _service.ForgetPasswordService.handleForgetPassword(forgetPassword);
+            return Ok(new { otpCodeId });
+        }
 
-            var success = _service.ForgetPasswordService.handleForgetPassword(forgetPassword);
-            if (!success)
-            {
-                return Conflict(new { message = $"Email không chính xác!" });
-            }
-            return Ok();
+        [HttpPost]
+        [Route("OtpCode")]
+        public IActionResult ValidateOtpCode([FromBody] OtpCodeForValidationDto otpCodeForValidation)
+        {
+            var user = _service.ForgetPasswordService.authenticateOtpCode(otpCodeForValidation);
+            var token = _service.LoginService.CreateToken(user);
+            return Accepted(new { message = "Xác thực thành công!", token, user.userId });
         }
     }
 }

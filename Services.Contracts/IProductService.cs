@@ -4,7 +4,7 @@ namespace Services.Contracts
 {
     public interface IProductService
     {
-        void CreateProduct(ProductForCreationDto productForCreation);
+        int CreateProduct(ProductForCreationDto productForCreation);
 
         IEnumerable<ProductDto> GetAllProducts(bool trackChange);
 

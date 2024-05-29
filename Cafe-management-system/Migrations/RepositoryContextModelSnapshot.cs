@@ -22,6 +22,70 @@ namespace Cafe_management_system.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Entities.Models.Bill", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("BillId");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<DateTime>("creationDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("CreationDate");
+
+                    b.Property<Guid>("guid")
+                        .HasColumnType("uuid")
+                        .HasColumnName("Guid");
+
+                    b.Property<int>("paymentMethodId")
+                        .HasColumnType("integer")
+                        .HasColumnName("PaymentMethodId");
+
+                    b.Property<int>("userId")
+                        .HasColumnType("integer")
+                        .HasColumnName("UserId");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("paymentMethodId");
+
+                    b.HasIndex("userId");
+
+                    b.ToTable("Bills");
+                });
+
+            modelBuilder.Entity("Entities.Models.BillProduct", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("Id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<int>("billId")
+                        .HasColumnType("integer")
+                        .HasColumnName("BillId");
+
+                    b.Property<int>("productId")
+                        .HasColumnType("integer")
+                        .HasColumnName("ProductId");
+
+                    b.Property<int>("quantity")
+                        .HasColumnType("integer")
+                        .HasColumnName("Quantity");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("billId");
+
+                    b.HasIndex("productId");
+
+                    b.ToTable("BillProducts");
+                });
+
             modelBuilder.Entity("Entities.Models.Category", b =>
                 {
                     b.Property<int>("id")
@@ -48,6 +112,79 @@ namespace Cafe_management_system.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("Entities.Models.OtpCode", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("OtpCodeId");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<int>("attempsCnt")
+                        .HasColumnType("integer")
+                        .HasColumnName("AttempsCnt");
+
+                    b.Property<string>("code")
+                        .IsRequired()
+                        .HasMaxLength(5)
+                        .HasColumnType("character varying(5)")
+                        .HasColumnName("Code");
+
+                    b.Property<DateTime>("creationDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("CreationDate");
+
+                    b.Property<bool>("used")
+                        .HasColumnType("boolean")
+                        .HasColumnName("Used");
+
+                    b.Property<int>("userId")
+                        .HasColumnType("integer")
+                        .HasColumnName("UserId");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("userId");
+
+                    b.ToTable("OtpCodes");
+                });
+
+            modelBuilder.Entity("Entities.Models.PaymentMethod", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("PaymentMethodId");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("id");
+
+                    b.ToTable("PaymentMethods");
+
+                    b.HasData(
+                        new
+                        {
+                            id = 1,
+                            description = "Cash"
+                        },
+                        new
+                        {
+                            id = 2,
+                            description = "Bank"
+                        },
+                        new
+                        {
+                            id = 3,
+                            description = "Creadit card"
+                        });
+                });
+
             modelBuilder.Entity("Entities.Models.Product", b =>
                 {
                     b.Property<int>("id")
@@ -56,6 +193,10 @@ namespace Cafe_management_system.Migrations
                         .HasColumnName("ProductId");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("id"));
+
+                    b.Property<bool>("active")
+                        .HasColumnType("boolean")
+                        .HasColumnName("Active");
 
                     b.Property<int>("categoryId")
                         .HasColumnType("integer")
@@ -75,8 +216,8 @@ namespace Cafe_management_system.Migrations
                         .HasColumnType("character varying(256)")
                         .HasColumnName("ProductName");
 
-                    b.Property<bool>("status")
-                        .HasColumnType("boolean")
+                    b.Property<int>("status")
+                        .HasColumnType("integer")
                         .HasColumnName("Status");
 
                     b.Property<int>("userId")
@@ -184,10 +325,59 @@ namespace Cafe_management_system.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Entities.Models.Bill", b =>
+                {
+                    b.HasOne("Entities.Models.PaymentMethod", "PaymentMethod")
+                        .WithMany("Bills")
+                        .HasForeignKey("paymentMethodId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Entities.Models.User", "User")
+                        .WithMany("Bills")
+                        .HasForeignKey("userId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PaymentMethod");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Entities.Models.BillProduct", b =>
+                {
+                    b.HasOne("Entities.Models.Bill", "bill")
+                        .WithMany("BillProducts")
+                        .HasForeignKey("billId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Entities.Models.Product", "Product")
+                        .WithMany("BillProducts")
+                        .HasForeignKey("productId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("bill");
+                });
+
             modelBuilder.Entity("Entities.Models.Category", b =>
                 {
                     b.HasOne("Entities.Models.User", "User")
                         .WithMany("Categories")
+                        .HasForeignKey("userId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Entities.Models.OtpCode", b =>
+                {
+                    b.HasOne("Entities.Models.User", "User")
+                        .WithMany()
                         .HasForeignKey("userId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -204,7 +394,7 @@ namespace Cafe_management_system.Migrations
                         .IsRequired();
 
                     b.HasOne("Entities.Models.User", "User")
-                        .WithMany()
+                        .WithMany("Products")
                         .HasForeignKey("userId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -217,7 +407,7 @@ namespace Cafe_management_system.Migrations
             modelBuilder.Entity("Entities.Models.User", b =>
                 {
                     b.HasOne("Entities.Models.Role", "Role")
-                        .WithMany("User")
+                        .WithMany("Users")
                         .HasForeignKey("roleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -225,14 +415,33 @@ namespace Cafe_management_system.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("Entities.Models.Bill", b =>
+                {
+                    b.Navigation("BillProducts");
+                });
+
+            modelBuilder.Entity("Entities.Models.PaymentMethod", b =>
+                {
+                    b.Navigation("Bills");
+                });
+
+            modelBuilder.Entity("Entities.Models.Product", b =>
+                {
+                    b.Navigation("BillProducts");
+                });
+
             modelBuilder.Entity("Entities.Models.Role", b =>
                 {
-                    b.Navigation("User");
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("Entities.Models.User", b =>
                 {
+                    b.Navigation("Bills");
+
                     b.Navigation("Categories");
+
+                    b.Navigation("Products");
                 });
 #pragma warning restore 612, 618
         }

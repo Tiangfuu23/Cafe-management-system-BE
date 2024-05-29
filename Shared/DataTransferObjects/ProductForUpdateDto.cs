@@ -18,7 +18,10 @@ namespace Shared.DataTransferObjects
         public float price { get; init; }
 
         [Required(ErrorMessage = "Product's status is required")]
-        public bool status { get; init; }
+        public int status { get; init; }
+
+        [Required(ErrorMessage = "Product's active field is required")]
+        public Boolean active { get; init; }
 
         [Required(ErrorMessage = "Category Id is required")]
         public int categoryId { get; init; }
