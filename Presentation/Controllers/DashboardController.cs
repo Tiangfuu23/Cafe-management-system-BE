@@ -7,7 +7,7 @@ namespace Presentation.Controllers
 {
     [ApiController]
     [Route("Dashboard")]
-    [Authorize]
+    [Authorize(Roles = "Admin,Manager")]
     public class DashboardController : ControllerBase
     {
         private readonly IServiceManager _service;

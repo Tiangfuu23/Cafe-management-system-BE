@@ -17,6 +17,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Manager")]
         public IActionResult createProduct([FromBody] ProductForCreationDto productForCreation)
         {
             int id = _services.ProductService.CreateProduct(productForCreation);
@@ -33,6 +34,7 @@ namespace Presentation.Controllers
 
         [HttpGet]
         [Route("{id:int}")]
+        [Authorize(Roles = "Admin,Manager")]
         public IActionResult getProduct(int id)
         {
             var productDto = _services.ProductService.GetProduct(id, trackChange: false);
@@ -41,6 +43,7 @@ namespace Presentation.Controllers
 
         [HttpPut]
         [Route("{id:int}")]
+        [Authorize(Roles = "Admin,Manager")]
         public IActionResult updateProduct(int id, [FromBody] ProductForUpdateDto productForUpdateDto)
         {
             if (id != productForUpdateDto.id) return BadRequest("Id in route is not the same as id in payload!");
@@ -50,6 +53,7 @@ namespace Presentation.Controllers
 
         [HttpDelete]
         [Route("{id:int}")]
+        [Authorize(Roles = "Admin,Manager")]
         public IActionResult deleteProduct(int id)
         {
             _services.ProductService.DeleteProduct(id);
@@ -58,6 +62,7 @@ namespace Presentation.Controllers
 
         [HttpPut]
         [Route("{id:int}/Enable")]
+        [Authorize(Roles = "Admin,Manager")]
         public IActionResult enableProduct(int id)
         {
             _services.ProductService.UpdateProductStatus(id, newStatus: true);
@@ -66,10 +71,19 @@ namespace Presentation.Controllers
 
         [HttpPut]
         [Route("{id:int}/Disable")]
+        [Authorize(Roles = "Admin,Manager")]
         public IActionResult disableProduct(int id)
         {
             _services.ProductService.UpdateProductStatus(id, newStatus: false);
             return Ok(new { message = "Cập nhật thành công" });
+        }
+
+        [Route("Checktoken")]
+        [HttpGet]
+        [Authorize(Roles = "Admin,Manager")]
+        public IActionResult CheckToken()
+        {
+            return Ok();
         }
     }
 }

@@ -15,5 +15,6 @@ namespace Services.Contracts
 
         void UpdateUser(int userId, UserForUpdateDto userForUpdateDto);
 
+        void UpdateUserActiveState(int userId, bool activeState);
     }
 }

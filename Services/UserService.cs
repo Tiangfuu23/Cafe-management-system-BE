@@ -48,6 +48,7 @@ namespace Services
                                         email = user.email,
                                         gender = user.gender,
                                         birthday = user.birthday,
+                                        active = user.active,
                                         Role = new Role
                                         {
                                             roleId = user.roleId,
@@ -105,6 +106,16 @@ namespace Services
             _repositoryManager.Save();
 
 
+        }
+
+        public void UpdateUserActiveState(int userId, bool activeState)
+        {
+            var userEntity = _repositoryManager.RepositoryUser.GetUser(userId, trackChange: true);
+
+            if (userEntity == null) throw new UserNotFoundException(userId);
+
+            userEntity.active = activeState;
+            _repositoryManager.Save();
         }
 
         private DateTime? ConvertDateTimeToUTC(DateTime? datetime)

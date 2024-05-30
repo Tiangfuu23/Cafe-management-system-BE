@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Entities.Models
@@ -43,6 +44,10 @@ namespace Entities.Models
         [Required(ErrorMessage = "RoleId is require")]
         public int roleId { get; set; }
         public Role? Role { get; set; }
+
+        [Column("Active")]
+        [Required(ErrorMessage = "Active field is required")]
+        public Boolean active { get; set; }
 
         public List<Category>? Categories { get; set; }
 

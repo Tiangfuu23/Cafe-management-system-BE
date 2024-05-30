@@ -38,6 +38,11 @@ namespace Services
 
             }
 
+            if (!user.active)
+            {
+                throw new UserAccountNotActiveException();
+            }
+
             var roles = _repositoryManager.RepositoryRole.GetAllRoles(trackChange: false);
 
             foreach(var role in roles)

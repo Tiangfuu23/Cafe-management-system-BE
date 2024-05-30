@@ -18,7 +18,7 @@ namespace Presentation.Controllers {
         }
 
         [HttpGet(Name = "GetUsers")]
-        [Authorize]
+        [Authorize(Roles = "Admin,Manager")]
         public IActionResult GetUsers()
         {
            var userDtoList = _serviceManager.UserService.GetAllUsers(trackChange: false);
@@ -28,6 +28,7 @@ namespace Presentation.Controllers {
 
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Manager")]
         public IActionResult Register([FromBody] UserForRegistrationDto userForRegistrationDto)
         {
             var id = _serviceManager.UserService.Register(userForRegistrationDto);
@@ -61,6 +62,24 @@ namespace Presentation.Controllers {
         {
             var userDto = _serviceManager.UserService.GetUser(id, trackChange: false);
             return Ok(userDto);
+        }
+
+        [Route("{id:int}/Active")]
+        [HttpPut]
+        [Authorize(Roles = "Admin,Manager")]
+        public IActionResult activeUser(int id)
+        {
+            _serviceManager.UserService.UpdateUserActiveState(id, true);
+            return Ok(new { message = "Cập nhật thành công" });
+        }
+
+        [Route("{id:int}/Inactive")]
+        [HttpPut]
+        [Authorize(Roles = "Admin,Manager")]
+        public IActionResult inactiveUser(int id)
+        {
+            _serviceManager.UserService.UpdateUserActiveState(id, false);
+            return Ok(new { message = "Cập nhật thành công" });
         }
 
         [Route("{id:int}/Bill")]

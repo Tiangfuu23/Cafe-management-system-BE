@@ -22,6 +22,7 @@ namespace Presentation.Controllers
             var result = _serviceManager.LoginService.ValidateUSer(userforAuth);
             var userDto = result.Item1 as UserDto;
             var tokenDto = result.Item2 as TokenDto;
+
             return Ok(new {user = userDto,  tokenDto.token });
         }
 

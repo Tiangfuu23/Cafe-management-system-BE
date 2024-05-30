@@ -26,8 +26,8 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         [Route("{id:int}")]
+        [Authorize(Roles = "Admin,Manager")]
         public IActionResult getCategory(int id)
         {
             var categoryDto = _service.CategoryService.getCategoryById(id, false);
@@ -36,7 +36,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = "Admin,Manager")]
         public IActionResult createCategory([FromBody] CategoryForCreationDto categoryForCreation)
         {
             int id = _service.CategoryService.createCategory(categoryForCreation);
@@ -44,8 +44,8 @@ namespace Presentation.Controllers
         }
 
         [HttpPut]
-        [Authorize]
         [Route("{id:int}")]
+        [Authorize(Roles = "Admin,Manager")]
         public IActionResult updateCategory(int id, [FromBody] CategoryForUpdateDto categoryForUpdate)
         {
             if (id != categoryForUpdate.id)
@@ -57,8 +57,8 @@ namespace Presentation.Controllers
         }
 
         [HttpDelete]
-        [Authorize]
         [Route("{id:int}")]
+        [Authorize(Roles = "Admin,Manager")]
         public IActionResult deleteCategory(int id)
         {
             _service.CategoryService.deleteCategory(id);
@@ -66,12 +66,20 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         [Route("{id:int}/Product")]
+        [Authorize(Roles = "Admin,Manager")]
         public IActionResult getProductsByCategoryId(int id)
         {
             var productsDtoList = _service.CategoryService.getProductsByCategoryId(id, trackChange: false);
             return Ok(productsDtoList);
+        }
+
+        [Route("Checktoken")]
+        [HttpGet]
+        [Authorize(Roles = "Admin,Manager")]
+        public IActionResult CheckToken()
+        {
+            return Ok();
         }
     }
 }
